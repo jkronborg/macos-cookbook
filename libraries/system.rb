@@ -37,7 +37,7 @@ module MacOS
         command_output = sp_display_data_command_output || shell_out('system_profiler -xml SPDisplaysDataType').stdout
         data = Plist.parse_xml command_output
         raw_data = data.first.extend Hashie::Extensions::DeepFind
-        @resolution = raw_data.deep_find_all('_spdisplays_pixels').first
+        @resolution = raw_data.deep_find_all('_spdisplays_pixels').first.tr(' ', '')
         @width = rez_split(@resolution).first
         @height = rez_split(@resolution).last
       end
@@ -45,7 +45,7 @@ module MacOS
       private
 
       def rez_split(resolution)
-        resolution.split(' x ').map(&:to_i)
+        resolution.split('x').map(&:to_i)
       end
     end
 

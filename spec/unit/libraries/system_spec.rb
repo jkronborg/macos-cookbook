@@ -123,7 +123,7 @@ describe MacOS::System::Display do
 
   context 'finding data about a builtin display' do
     it 'finds the resolution' do
-      expect(builtin_display.resolution).to eq '2880 x 1800'
+      expect(builtin_display.resolution).to eq '2880x1800'
     end
 
     it 'finds the display width' do
@@ -137,7 +137,7 @@ describe MacOS::System::Display do
 
   context 'finding data about an external display' do
     it 'it finds the pixels resolution' do
-      expect(external_display.resolution).to eq '3440 x 1440'
+      expect(external_display.resolution).to eq '3440x1440'
     end
 
     it 'finds the display height' do
