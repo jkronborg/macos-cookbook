@@ -114,3 +114,38 @@ describe MacOS::System::ScreenSaver do
     end
   end
 end
+
+describe MacOS::System::Display do
+  let(:builtin_display_output) { IO.read 'spec/unit/test_files/builtin_display_data.plist' }
+  let(:external_display_output) { IO.read 'spec/unit/test_files/external_display_data.plist' }
+  let(:builtin_display) { MacOS::System::Display.new builtin_display_output }
+  let(:external_display) { MacOS::System::Display.new external_display_output }
+
+  context 'finding data about a builtin display' do
+    it 'finds the resolution' do
+      expect(builtin_display.resolution).to eq '2880 x 1800'
+    end
+
+    it 'finds the display width' do
+      expect(builtin_display.width).to eq 2880
+    end
+
+    it 'finds the display height' do
+      expect(builtin_display.height).to eq 1800
+    end
+  end
+
+  context 'finding data about an external display' do
+    it 'it finds the pixels resolution' do
+      expect(external_display.resolution).to eq '3440 x 1440'
+    end
+
+    it 'finds the display height' do
+      expect(external_display.width).to eq 3440
+    end
+
+    it 'it finds the pixel width' do
+      expect(external_display.height).to eq 1440
+    end
+  end
+end

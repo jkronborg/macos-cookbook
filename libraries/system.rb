@@ -30,6 +30,25 @@ module MacOS
       end
     end
 
+    class Display
+      attr_reader :resolution, :height, :width
+
+      def initialize(sp_display_data_command_output = nil)
+        command_output = sp_display_data_command_output || shell_out('system_profiler -xml SPDisplaysDataType').stdout
+        data = Plist.parse_xml command_output
+        raw_data = data.first.extend Hashie::Extensions::DeepFind
+        @resolution = raw_data.deep_find_all('_spdisplays_pixels').first
+        @width = rez_split(@resolution).first
+        @height = rez_split(@resolution).last
+      end
+
+      private
+
+      def rez_split(resolution)
+        resolution.split(' x ').map(&:to_i)
+      end
+    end
+
     class ScreenSaver
       attr_reader :user
 
@@ -38,8 +57,7 @@ module MacOS
       end
 
       def disabled?
-        settings('read', '0') &&
-          settings('read-type', 'integer')
+        settings('read', '0') && settings('read-type', 'integer')
       end
 
       def settings(query_type, expected_value)
@@ -49,8 +67,7 @@ module MacOS
       end
 
       def query(query_type)
-        shell_out('defaults', '-currentHost', query_type, 'com.apple.screensaver', 'idleTime',
-        user: @user)
+        shell_out('defaults', '-currentHost', query_type, 'com.apple.screensaver', 'idleTime', user: @user)
       end
     end
   end
